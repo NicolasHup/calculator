@@ -8,20 +8,20 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let clear = document.querySelector('.btn-clear')
     let equal = document.querySelector('.btn-equal')
-    let buttons = document.querySelectorAll('.btn')
+    let buttons = document.querySelectorAll('.btn-grey')
     let opertors = document.querySelectorAll('.btn-func')
 
     let previousScreen = document.querySelector('.previous-oparand')
     let currentScreen = document.querySelector('.current-operand')
 
     buttons.forEach((button) => button.addEventListener("click", function(e){
-        handleButton(e.target.dataset.num)
-        currentScreen.textContent = currentValue
+        handleButton(e.target.textContent)
+        currentScreen.textContent= currentValue
     }))
 
     opertors.forEach((op) => op.addEventListener("click", function(e){
-        handleOperator(e.target.dataset.num)
-        previousScreen.textContent = previousValue 
+        handleOperator(e.target.textContent)
+        previousScreen.textContent = previousValue + " " + operator
         currentScreen.textContent = currentValue
     }))
 
@@ -32,6 +32,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
         previousScreen.textContent = currentValue
         currentScreen.textContent = currentValue
+    })
+
+    equal.addEventListener("click", function() {
+        if(currentValue != '' && previousValue != ''){
+        calculate() 
+        previousScreen.textContent = ''
+        currentScreen.textContent = previousValue
+        }
     })
 })
 
@@ -44,4 +52,27 @@ function handleOperator(op) {
     operator = op
     previousValue = currentValue
     currentValue = ''
+}
+
+function calculate() {
+    previousValue = Number(previousValue)
+    currentValue = Number(currentValue)
+
+    if (operator === "+") {
+        previousValue += currentValue
+    } else if (operator === "-") {
+        previousValue -= currentValue
+    } else if (operator === "x") {
+        previousValue *= currentValue
+    } else {
+        previousValue /= currentValue
+    }
+    
+    previousValue = roundNumber(previousValue)
+    previousValue = previousValue.toString()
+    currentValue = previousValue.toString()
+}
+
+function roundNumber(num) {
+    return Math.round(num *1000) / 1000
 }
